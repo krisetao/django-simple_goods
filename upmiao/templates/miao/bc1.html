@@ -1,0 +1,75 @@
+{% load static %}
+<html><head><title>Books</title>
+
+<style type="text/css">
+	div {
+    display: block;
+}
+page-wrap {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0;
+}
+.page * {
+    min-width: 30px;
+    padding: 0 5px;
+    height: 36px;
+    font-size: 14px;
+    line-height: 36px;
+    color: #333;
+    background: #fff;
+    text-align: center;
+    margin-right: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<h1>Books</h1>
+<ul>
+{% for i in products %}
+    <img class="user-avator" src="{{i.image}}">
+<li>{{ i.name }}</li>
+{% endfor %}
+</ul>
+<div class="page-wrap">
+			<div class="page"><a href="http://www.xinpianchang.com/channel/index/type-0/sort-like/duration_type-0/resolution_type-/page-4" title="上一页"><span class="arrow-page icon-arrow-left"></span></a><a href="http://www.xinpianchang.com/channel/index/type-0/sort-like/duration_type-0/resolution_type-/page-1" title="首页">1</a>  <span class="page-points">...</span>  <a href="http://www.xinpianchang.com/channel/index/type-0/sort-like/duration_type-0/resolution_type-/page-3">3</a><a href="http://www.xinpianchang.com/channel/index/type-0/sort-like/duration_type-0/resolution_type-/page-4">4</a> <span class="current">5</span> <a href="http://www.xinpianchang.com/channel/index/type-0/sort-like/duration_type-0/resolution_type-/page-6">6</a><a href="http://www.xinpianchang.com/channel/index/type-0/sort-like/duration_type-0/resolution_type-/page-7">7</a>  <span class="page-points">...</span>  <a href="http://www.xinpianchang.com/channel/index/type-0/sort-like/duration_type-0/resolution_type-/page-6" title="下一页"><span class="arrow-page icon-arrow-right"></span></a></div>
+		</div>
+<div class="page-wrap">
+    <div class="page">
+        {% if previous_page %}
+        <a href="{{previous_page}}" title="下一页"><span
+                class="arrow-page icon-arrow-right"></span></a>
+        {% endif %}
+
+        {% for page in display_pages %}
+        {% if cur_page == page %}
+        <span class="current">{{page}}</span>
+        {% else %}
+        <a href="{{page}}">{{page}}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if next_page %}
+        <a href="{{next_page}}" title="下一页"><span class="arrow-page icon-arrow-right"></span></a>
+        {% endif %}
+    </div>
+</div>
+<ul class="pagination">
+                <li class="">   {% if second_list_obj.has_previous %}
+               <a href="?id={{ id }}&page={{ second_list_obj.previous_page_number }}&hostlist_search_q={{ hostlist_search_q }}">上一页</a>
+                {% endif %}
+                </li>
+                    <li class=" "><span>第{{ second_list_obj.number }}页 | 共{{ p.num_pages}}页</span></li>
+                <li class="">
+                    {% if second_list_obj.has_next %}
+                        <a href="?id={{ id }}&page={{ second_list_obj.next_page_number }}&hostlist_search_q={{ hostlist_search_q }}">下一页</a>
+                    {% endif %}
+                </li>
+            </ul>
+<span style="color: #8c8c8c"> 总计{{ second_list_obj.paginator.count }}条数据,总计{{ second_list_obj.paginator.num_pages }}页</span>
+
+	 
+
+</body></html>

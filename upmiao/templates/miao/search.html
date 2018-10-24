@@ -1,0 +1,302 @@
+{% load static %}
+{% load bootstrap3 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--     <script src="angularjs/angular.js"></script> -->
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <style>
+        .box{
+            width: 100%;
+        }
+        .box1{
+            width: 100%;
+            height: 70px;
+            background: lavender;
+        }
+        .clear:after{
+            content: "\200B";
+            display: block;
+            clear: both;
+        }
+        .btn{
+            background: orange;
+            color: white;
+            border: 0;
+            width: 80px;
+            height: 30px;
+            border-radius: 5px;
+        }
+        .liang{
+            background: crimson;
+            color: white;
+            border: 0;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 5px;
+            float: right;
+            margin: 10px;
+        }
+        #sou{
+            width: 200px;
+            height: 30px;
+            border-radius: 3px;
+            margin: 10px;
+        }
+        table{
+            margin-top: 15px;
+            width: 100%;
+/*            border-collapse: collapse;*/
+
+            text-align: center;
+/*            width :300px ;*/
+            height:100px ;
+            cellpadding:11px;
+        }
+        th{
+            border: 1px solid silver;
+        }
+        /*点击列表头信息，如：”商品名称”时该头信息名称变红色*/
+        th:active{color: red}
+        th:hover{color: red}
+        td{
+            border: 1px solid silver;
+
+        }
+        .page-wrap {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0;
+        }
+        .page * {
+            min-width: 30px;
+            padding: 0 5px;
+            height: 36px;
+            font-size: 14px;
+            line-height: 36px;
+            color: #333;
+            background: #fff;
+            text-align: center;
+            margin-right: 5px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+
+</head>
+<body ng-app="myapp" ng-controller="myCtrl">
+<div class="box">
+    <h1>商品信息搜索结果</h1>
+    <hr>
+</div>
+<div class="box1">
+    <form style="float:left; margin-right:20px;margin-left:10px;"; method="get" action="/search/">
+        商品名称：<input name ="q" type="search" placeholder="" required>
+    </form>
+    <form style="float:left; margin-right:20px;" method="get" action="/search/">
+        商品ID：<input name ="w" type="search" placeholder="" required>
+    </form>
+    <form method="get" action="/search/">
+        SKU：<input name ="e" type="search" placeholder="" required>
+    </form>
+<!--         ___SKU：<input name ="e" type="search" placeholder="搜索" required> -->
+<!--     <input type="text" placeholder="输入关键字..." id="sou" ng-model="query"/> -->
+<!--     <button ng-click="pi()" class="liang">批量删除</button> -->
+    <button ng-click="pi()" class="liang" onclick="window.location.href='{% url "goods:product_list" %}'">回到首页</button>
+</div>
+<!-- <input type="button" value="回到首页" onclick="window.location.href='{% url "goods:product_list" %}'"> -->
+<table cellpadding="11px">
+    <!--用ng-repaet指令将对象遍历并渲染到页面中-->
+    <!--Filter实现模糊查询的功能。用户在输入框中键入信息的时候商品列表会动态显示符合要求的查询信息-->
+<!--     <td><input type="checkbox" ng-model="arr.state" ng-click="itemCheck()"/></td>
+            <td><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/mamibag.jpg' %}{% endif %}"></td>
+            <td>1{{ products.pid }}</td>
+            <td>{{ products.name }}</td>
+            <td>￥{{ products.price }}</td>
+            <td>{{ products.stock }}</td>
+            <td>{{ products.sku }}</td>
+            <td>上架时间</td> -->
+<!--     {% for product in products %}
+        <tr ng-repeat="arr in goods | filter:query">
+            <td><input type="checkbox" ng-model="arr.state" ng-click="itemCheck()"/></td>
+            <td class="thumbnail"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/mamibag.jpg' %}{% endif %}" height="100" width="100" class="img-responsive"></td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.pid }}</td>
+            <td>￥{{ product.price }}</td>
+            <td>{{ product.stock }}</td>
+            <td>{{ product.sku }}</td>
+            <td>{{ product.addtime|date:"Y-m-d H:i:s" }}</td>
+        </tr>
+    {% endfor %} -->
+    {% if error_msg %}
+    <p>{{ error_msg }}</p>
+{% endif %}
+
+{% if request.user.is_superuser %}
+    <tr>
+        <th ><input type="checkbox" ng-model="allCheck" ng-click="all()"/></th>
+        <th style="text-align:center;">商品图片</th>
+        <th style="text-align:center;">商品名称</th>
+        <th style="text-align:center;">商品ID</th>
+        <th style="text-align:center;">商品价格</th>
+        <th style="text-align:center;"> 商品库存</th>
+        <th style="text-align:center;">SKU</th>
+        <th style="text-align:center;">上架时间</th>
+    </tr>
+    {% if post_list %}
+        {% for product in post_list %}
+            <div>
+                <tr ng-repeat="arr in goods | filter:query">
+                    <td><input type="checkbox" ng-model="arr.state" ng-click="itemCheck()"/></td>
+                    <td class="thumbnail"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/mamibag.jpg' %}{% endif %}" height="100" width="100" class="img-responsive"></td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.pid }}</td>
+                    <td>￥{{ product.price }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>{{ product.sku }}</td>
+                    <td>{{ product.addtime|date:"Y-m-d H:i:s" }}</td>
+                </tr>
+            </div>
+            {% empty %}
+              <div class="no-post">
+                没有搜索到符合条件的商品
+              </div>
+        {% endfor %}
+    {% elif pid_list %}
+        {% for product in pid_list %}
+              <div>
+              <tr ng-repeat="arr in goods | filter:query">
+                <td><input type="checkbox" ng-model="arr.state" ng-click="itemCheck()"/></td>
+                <td class="thumbnail"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/mamibag.jpg' %}{% endif %}" height="100" width="100" class="img-responsive"></td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.pid }}</td>
+                <td>￥{{ product.price }}</td>
+                <td>{{ product.stock }}</td>
+                <td>{{ product.sku }}</td>
+                <td>{{ product.addtime|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+      </div>
+    {% empty %}
+      <div class="no-post">
+        没有搜索到符合条件的商品
+      </div>
+    {% endfor %}
+    {% elif sku_list %}
+        {% for product in sku_list %}
+      <div>
+              <tr ng-repeat="arr in goods | filter:query">
+                <td><input type="checkbox" ng-model="arr.state" ng-click="itemCheck()"/></td>
+                <td class="thumbnail"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/mamibag.jpg' %}{% endif %}" height="100" width="100" class="img-responsive"></td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.pid }}</td>
+                <td>￥{{ product.price }}</td>
+                <td>{{ product.stock }}</td>
+                <td>{{ product.sku }}</td>
+                <td>{{ product.addtime|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+      </div>
+        {% empty %}
+          <div class="no-post">
+            没有搜索到符合条件的商品
+          </div>
+        {% endfor %}
+    {% endif %}
+{% else %}
+    <tr>
+        <th ><input type="checkbox" ng-model="allCheck" ng-click="all()"/></th>
+        <th style="text-align:center;">商品图片</th>
+        <th style="text-align:center;">商品名称</th>
+        <th style="text-align:center;">商品ID</th>
+        <th style="text-align:center;">隐藏字段</th>
+        <th style="text-align:center;"> 商品库存</th>
+        <th style="text-align:center;">SKU</th>
+        <th style="text-align:center;">上架时间</th>
+    </tr>
+        {% if post_list %}
+        {% for product in post_list %}
+              <div>
+              <tr ng-repeat="arr in goods | filter:query">
+                <td><input type="checkbox" ng-model="arr.state" ng-click="itemCheck()"/></td>
+                <td class="thumbnail"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/mamibag.jpg' %}{% endif %}" height="100" width="100" class="img-responsive"></td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.pid }}</td>
+                <td>￥一刀999</td>
+                <td>{{ product.stock }}</td>
+                <td>{{ product.sku }}</td>
+                <td>{{ product.addtime|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+      </div>
+    {% empty %}
+      <div class="no-post">
+        没有搜索到符合条件的商品
+      </div>
+    {% endfor %}
+    {% elif pid_list %}
+        {% for product in pid_list %}
+              <div>
+              <tr ng-repeat="arr in goods | filter:query">
+                <td><input type="checkbox" ng-model="arr.state" ng-click="itemCheck()"/></td>
+                <td class="thumbnail"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/mamibag.jpg' %}{% endif %}" height="100" width="100" class="img-responsive"></td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.pid }}</td>
+                <td>￥一刀999</td>
+                <td>{{ product.stock }}</td>
+                <td>{{ product.sku }}</td>
+                <td>{{ product.addtime|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+      </div>
+    {% empty %}
+      <div class="no-post">
+        没有搜索到符合条件的商品
+      </div>
+    {% endfor %}
+    {% elif sku_list %}
+
+        {% for product in sku_list %}
+      <div>
+              <tr ng-repeat="arr in goods | filter:query">
+                <td><input type="checkbox" ng-model="arr.state" ng-click="itemCheck()"/></td>
+                <td class="thumbnail"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/mamibag.jpg' %}{% endif %}" height="100" width="100" class="img-responsive"></td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.pid }}</td>
+                <td>￥一刀999</td>
+                <td>{{ product.stock }}</td>
+                <td>{{ product.sku }}</td>
+                <td>{{ product.addtime|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+      </div>
+        {% empty %}
+      <div class="no-post">
+        没有搜索到符合条件的商品
+      </div>
+    {% endfor %}
+    {% endif %}
+{% endif %}
+</table>
+<div class="page-wrap">
+    <div class="page">
+        {% if previous_page %}
+        <a href="/{{previous_page}}/" title="下一页"><span
+                class="arrow-page icon-arrow-right"></span></a>
+        {% endif %}
+
+        {% for page in display_pages %}
+        {% if cur_page == page %}
+        <span class="current">{{page}}</span>
+        {% else %}
+        <a href="/{{page}}/">{{page}}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if next_page %}
+        <a href="/{{next_page}}/" title="下一页"><span class="arrow-page icon-arrow-right"></span></a>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
+

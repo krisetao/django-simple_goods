@@ -1,0 +1,97 @@
+{%  extends  "miao/layouts/master.html"  %}
+{% block container  %}
+{% load static %}
+
+<div class="box">
+    <h1>产品编号搜索结果</h1>
+    <hr>
+</div>
+<div class="box1">
+    <form style="float:left; margin-right:20px;margin-left:10px;"; method="get" action="/search/">
+       产品编号：<input name ="q" type="search" placeholder="" required>
+    </form>
+    <form style="float:left; margin-right:20px;" method="get" action="/search/">
+        商品ID：<input name ="w" type="search" placeholder="" required>
+    </form>
+    <form method="get" action="/search/">
+        SKU：<input name ="e" type="search" placeholder="" required>
+    </form>
+    <button ng-click="pi()" class="liang" onclick="window.location.href='{% url "goods:product_list" %}'">回到首页</button>
+</div>
+<table cellpadding="11px">
+
+    {% if error_msg %}
+    <p>{{ error_msg }}</p>
+{% endif %}
+
+{% if request.user.is_superuser %}
+    <tr>
+            <th style="text-align:center;">商品图片</th>
+            <th style="text-align:center;">商品ID</th>
+            <th style="text-align:center;">发布日期</th>
+            <th style="text-align:center;">产品编号</th>
+            <th style="text-align:center;">规格</th>
+            <th style="text-align:center;"> 网店规格</th>
+            <th style="text-align:center;">条形码</th>
+            <th style="text-align:center;">专柜价</th>
+            <th style="text-align:center;">日常售价</th>
+            <th style="text-align:center;">活动价</th>
+            <th style="text-align:center;">控价</th>
+            <th style="text-align:center;">双11价</th>
+            <th style="text-align:center;">双11预售</th>
+    </tr>
+    {% for product in pid_num_list %}
+      <div>
+              <tr ng-repeat="arr in goods | filter:query">
+                <td class="thumbnail"><img src="{% if product.image %}{{ product.image }}{% else %}{% static 'img/default.jpg' %}{% endif %}" class="image"></td>
+                <td>{{ product.pid| default:'待补充' }}</td>
+                <td>{{ product.release_date| default:'待补充' }}</td>
+                <td>{{ product.pid_num| default:'待补充' }}</td>
+                <td>{{ product.spec| default:'待补充' }}</td>
+                <td>{{ product.brand_spec| default:'待补充' }}</td>
+                <td>{{ product.sku| default:'待补充' }}</td>
+                <td>￥{{ product.shop_price| default:'待补充' }}</td>
+                <td>￥{{ product.daily_price| default:'待补充' }}</td>
+                <td>￥{{ product.activity_price| default:'待补充' }}</td>
+                <td>￥{{ product.check_price| default:'待补充' }}</td>
+                <td>￥{{ product.tmall_price| default:'待补充' }}</td>
+                <td>￥{{ product.tmall_presell| default:'待补充' }}</td>
+            </tr>
+      </div>
+    {% endfor %}
+{% else %}
+    <tr>
+            <th style="text-align:center;">商品图片</th>
+            <th style="text-align:center;">商品ID</th>
+            <th style="text-align:center;">发布日期</th>
+            <th style="text-align:center;">产品编号</th>
+            <th style="text-align:center;">规格</th>
+            <th style="text-align:center;"> 网店规格</th>
+            <th style="text-align:center;">条形码</th>
+            <th style="text-align:center;">专柜价</th>
+            <th style="text-align:center;">日常售价</th>
+    </tr>
+    {% for product in pid_num_list %}
+      <div>
+              <tr ng-repeat="arr in goods | filter:query">
+                <td class="thumbnail"><img src="{% if product.image %}{{ product.image }}{% else %}{% static 'img/default.jpg' %}{% endif %}" class="image"></td>
+                <td>{{ product.pid| default:'待补充' }}</td>
+                <td>{{ product.release_date| default:'待补充' }}</td>
+                <td>{{ product.pid_num| default:'待补充' }}</td>
+                <td>{{ product.spec| default:'待补充' }}</td>
+                <td>{{ product.brand_spec| default:'待补充' }}</td>
+                <td>{{ product.sku| default:'待补充' }}</td>
+                <td>￥{{ product.shop_price| default:'待补充' }}</td>
+                <td>￥{{ product.daily_price| default:'待补充' }}</td>
+
+            </tr>
+      </div>
+    {% empty %}
+      <div class="no-post">
+        没有搜索到符合条件的商品
+      </div>
+    {% endfor %}
+{% endif %}
+</table>
+{%  endblock %}
+

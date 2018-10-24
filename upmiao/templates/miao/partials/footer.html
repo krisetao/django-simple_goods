@@ -1,0 +1,20 @@
+<!-- ************* footer **********************-->
+<div class="page-wrap">
+    <div class="page">
+        {% if previous_page %}
+        <a href="/{{previous_page}}/" title="下一页"><span
+                class="arrow-page icon-arrow-right"></span></a>
+        {% endif %}
+
+        {% for page in display_pages %}
+        {% if cur_page == page %}
+        <span class="current">{{page}}</span>
+        {% else %}
+        <a href="/{{page}}/">{{page}}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if next_page %}
+        <a href="/{{next_page}}/" title="下一页"><span class="arrow-page icon-arrow-right"></span></a>
+        {% endif %}
+    </div>
